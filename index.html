@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./CSS/all.css">
+    <title>Vue TodoList</title>
+</head>
+<body>
+    <div id="app">
+        <p>
+            <input type="text" v-model="inputText" @keyup.enter="inputHandler">
+        </p>
+        <p>
+            <button>全部</button>
+            <button>未完成</button>
+            <button>完成</button>
+        </p>
+        <ul>
+            <li v-for="item of list" :key="item.timestamp">
+                <input type="checkbox">{{item.content}}
+            </li>
+        </ul>
+    </div>
+</body>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.12/vue.js'></script>
+<script src="./index.js"></script>
+</html>
