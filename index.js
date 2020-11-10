@@ -1,12 +1,12 @@
 new Vue({
     el: "#app",
     data: {
-        inputText: "",
-        list: [],
-        show: "all",
-        compositionStatus:false,
-        editing:null,
-        editingText: "",
+        inputText: "",              // 輸入文字
+        list: [],                   // 所有資料
+        show: "all",                // 顯示類型
+        compositionStatus:false,    // 輸入法狀態
+        editing:null,               // 修改資料對象
+        editingText: "",            // 修改內容
     },
     computed: {
         filterList() {
@@ -31,25 +31,25 @@ new Vue({
             this.list.push({
                 timestamp: new Date().getTime(),
                 status: false,
-                content: this.inputText
+                content: this.inputText.trim()
             })
             this.inputText = ""
         },
-        deleteHandler(index){
+        deleteHandler(item){
             // 1. 第一種
-            // this.list = this.list.filter((item,i)=>{
-            //     return i != index
-            // })
+            this.list = this.list.filter((target)=>{
+                return target != item
+            })
 
             // 2. 第二種
-            this.list.splice(index,1)
+            //this.list.splice(index,1)
         },
         editHandler(item){
             this.editing = item
             this.editingText = item.content
         },
         completeHandler(){
-            this.editing.content= this.editingText
+            this.editing.content = this.editingText.trim()
             this.cancelHandler()
         },
         cancelHandler(){
