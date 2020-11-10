@@ -1,3 +1,4 @@
+<!-- 參考來源 (Alex 宅幹嘛) https://www.youtube.com/watch?v=7al2b8dfWk0&list=PLEfh-m_KG4dapPjoPvWX0c8JCK6-mIvGr&index=9 -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,8 +11,12 @@
 
 <body>
     <div id="app">
+        <!-- composition : 輸入法的開始與結束 -->
         <p>
-            <input type="text" v-model="inputText" @keyup.enter="inputHandler">
+            <input type="text" v-model="inputText" 
+            @compositionstart="cstartHandler" 
+            @compositionend="cendHandler"
+            @keyup.enter="inputHandler">
         </p>
         <p>
             <button @click="show = 'all'">全部</button>
@@ -19,8 +24,18 @@
             <button @click="show = 'done'">完成</button>
         </p>
         <ul>
-            <li v-for="item of filterList" :key="item.timestamp">
-                <input type="checkbox" v-model="item.status">{{item.content}}
+            <!-- :key 建議搭配後端的 primary key-->
+            <li v-for="(item,index) of filterList" :key="item.timestamp">
+                <template v-if="editing === item">
+                    <input type="text" v-model="editingText">
+                    <button @click="completeHandler">完成</button>
+                    <button @click="cancelHandler">取消</button>
+                </template>
+                <template v-else>
+                    <input type="checkbox" v-model="item.status">{{item.content}}
+                    <button @click="editHandler(item)">修改</button>
+                    <button @click="deleteHandler(index)">刪除</button>
+                </template>
             </li>
         </ul>
     </div>
