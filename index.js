@@ -1,3 +1,27 @@
+Vue.component("filter-component",{
+    data:function(){
+        return{
+            buttonList:[
+                { text:'全部',value:'all'},
+                { text: '未完成', value: 'open' },
+                { text: '完成', value: 'done' },
+            ]
+        }
+    },
+    template:`
+        <p>
+            <button 
+                v-for="item of buttonList" 
+                :key="item.text"
+                @click="$emit('filter',item.value)"
+            >{{item.text}}</button>
+        </p>
+    `
+})
+
+
+
+
 new Vue({
     el: "#app",
     data: {
@@ -20,6 +44,9 @@ new Vue({
         }
     },
     methods: {
+        filterHandler(value){
+            this.show = value
+        },
         cstartHandler(){
             this.compositionStatus = true
         },

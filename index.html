@@ -1,4 +1,8 @@
-<!-- 參考來源 (Alex 宅幹嘛) https://www.youtube.com/watch?v=7al2b8dfWk0&list=PLEfh-m_KG4dapPjoPvWX0c8JCK6-mIvGr&index=9 -->
+<!-- 參考來源 (Alex 宅幹嘛) 
+    https://www.youtube.com/watch?v=7al2b8dfWk0&list=PLEfh-m_KG4dapPjoPvWX0c8JCK6-mIvGr&index=9 
+    
+    https://www.youtube.com/watch?v=KQRfZ07bfAQ&list=PLEfh-m_KG4dapPjoPvWX0c8JCK6-mIvGr&index=10
+-->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,11 +22,12 @@
             @compositionend="cendHandler"
             @keyup.enter="inputHandler">
         </p>
-        <p>
+        <!-- <p>
             <button @click="show = 'all'">全部</button>
             <button @click="show = 'open'">未完成</button>
             <button @click="show = 'done'">完成</button>
-        </p>
+        </p> -->
+        <filter-component @filter="filterHandler"></filter-component>
         <ul>
             <!-- :key 建議搭配後端的 primary key-->
             <li v-for="(item,index) of filterList" :key="item.timestamp">
