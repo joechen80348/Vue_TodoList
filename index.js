@@ -1,14 +1,14 @@
-Vue.component("filter-component",{
-    data:function(){
-        return{
-            buttonList:[
-                { text:'全部',value:'all'},
+Vue.component("filter-component", {
+    data: function () {
+        return {
+            buttonList: [
+                { text: '全部', value: 'all' },
                 { text: '未完成', value: 'open' },
                 { text: '完成', value: 'done' },
             ]
         }
     },
-    template:`
+    template: `
         <p>
             <button 
                 v-for="item of buttonList" 
@@ -19,15 +19,15 @@ Vue.component("filter-component",{
     `
 })
 
-// 1. 外到內
-Vue.component("InputComponent",{
-    data:function(){
-        return{
+// 1. 外到內 資料內外交互傳遞
+Vue.component("InputComponent", {
+    data: function () {
+        return {
             compositionStatus: false,    // 輸入法狀態
         }
     },
-    props:['value'], // 外面想用 v-model,props要接value
-    template:`
+    props: ['value'], // props:接收外部資料用  ps:外面想用 v-model,props要接value
+    template: `
         <p>
             <input type="text" 
             v-bind:value="value"
@@ -37,7 +37,7 @@ Vue.component("InputComponent",{
             @keyup.enter="inputHandler">
         </p>
     `,
-    methods:{
+    methods: {
         cstartHandler() {
             this.compositionStatus = true
         },
@@ -47,22 +47,16 @@ Vue.component("InputComponent",{
         inputHandler() {
             if (this.compositionStatus) return false
             this.$emit("custom-input")
-            // this.list.push({
-            //     timestamp: new Date().getTime(),
-            //     status: false,
-            //     content: this.inputText.trim()
-            // })
-            // this.inputText = ""
         },
     }
 })
 
-// 2. 內到外
+// 2. 內到外 資料獨立控管
 Vue.component("InputComponent2", {
     data: function () {
         return {
             compositionStatus: false,    // 輸入法狀態
-            inputText:""
+            inputText: ""
         }
     },
     template: `
@@ -84,26 +78,21 @@ Vue.component("InputComponent2", {
         inputHandler() {
             if (this.compositionStatus) return false
             this.$emit("custom-input", this.inputText)
-            // this.list.push({
-            //     timestamp: new Date().getTime(),
-            //     status: false,
-            //     content: this.inputText.trim()
-            // })
             this.inputText = ""
         },
     }
 })
 
 
-// 1. 傳物件 2. 傳資料(建議使用)
-Vue.component("list-item-component",{
-    data:function(){
+// 1. 傳物件(示範) 2. 傳資料(建議使用)
+Vue.component("list-item-component", {
+    data: function () {
         return {
             editingText: "",            // 修改內容
         }
     },
-    props: ["item","editing"],
-    template:`
+    props: ["item", "editing"],
+    template: `
         <li>
             <template v-if="editing === item">
                 <input type="text" v-model="editingText">
@@ -117,40 +106,30 @@ Vue.component("list-item-component",{
             </template>
         </li>
     `,
-    computed:{
-        status:{
-            get(){
+    computed: {
+        status: {
+            get() {
                 return this.item.status
             },
-            set(value){
-                this.$emit("change",this.item,value)
+            set(value) {
+                this.$emit("change", this.item, value)
             }
-        }  
+        }
     },
-    methods:{
+    methods: {
         deleteHandler(item) {
-            this.$emit("delete",item)
-            // 1. 第一種
-            // this.list = this.list.filter((target) => {
-            //     return target != item
-            // })
-
-            // 2. 第二種
-            //this.list.splice(index,1)
+            this.$emit("delete", item)
         },
         editHandler(item) {
-            this.$emit("edit",item)
-            //this.editing = item
+            this.$emit("edit", item)
             this.editingText = item.content
         },
         completeHandler() {
             this.$emit("complate", this.editingText.trim())
-            // this.editing.content = this.editingText.trim()
             this.cancelHandler()
         },
         cancelHandler() {
             this.editingText = ""
-            // this.editing = null
             this.$emit("cancel")
 
         },
@@ -163,9 +142,7 @@ new Vue({
         inputText: "",              // 輸入文字
         list: [],                   // 所有資料
         show: "all",                // 顯示類型
-        // compositionStatus:false,    // 輸入法狀態
-        editing:null,               // 修改資料對象
-        // editingText: "",            // 修改內容
+        editing: null,              // 修改資料對象
     },
     computed: {
         filterList() {
@@ -179,46 +156,9 @@ new Vue({
         }
     },
     methods: {
-        filterHandler(value){
+        filterHandler(value) {
             this.show = value
         },
-        // cstartHandler(){
-        //     this.compositionStatus = true
-        // },
-        // cendHandler(){
-        //     this.compositionStatus = false
-        // },
-        // inputHandler() {
-        //     if (this.compositionStatus) return false
-        //     this.list.push({
-        //         timestamp: new Date().getTime(),
-        //         status: false,
-        //         content: this.inputText.trim()
-        //     })
-        //     this.inputText = ""
-        // },
-
-        // deleteHandler(item){
-        //     // 1. 第一種
-        //     this.list = this.list.filter((target)=>{
-        //         return target != item
-        //     })
-
-        //     // 2. 第二種
-        //     //this.list.splice(index,1)
-        // },
-        // editHandler(item){
-        //     this.editing = item
-        //     this.editingText = item.content
-        // },
-        // completeHandler(){
-        //     this.editing.content = this.editingText.trim()
-        //     this.cancelHandler()
-        // },
-        // cancelHandler(){
-        //     this.editingText = ""
-        //     this.editing = null
-        // },
         inputHandler() {
             this.list.push({
                 timestamp: new Date().getTime(),
@@ -234,30 +174,22 @@ new Vue({
                 content: value.trim()
             })
         },
-
-        deleteHandler(item){
-            // 1. 第一種
-            this.list = this.list.filter((target)=>{
+        deleteHandler(item) {
+            this.list = this.list.filter((target) => {
                 return target != item
             })
-
-            // 2. 第二種
-            //this.list.splice(index,1)
         },
-        editHandler(item){
+        editHandler(item) {
             this.editing = item
         },
-        completeHandler(value){
+        completeHandler(value) {
             this.editing.content = value
         },
-        cancelHandler(){
+        cancelHandler() {
             this.editing = null
         },
-
-        changeHandler(item,value){
+        changeHandler(item, value) {
             item.status = value
         }
-        
-
     }
 })
