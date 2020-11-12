@@ -34,7 +34,7 @@
         <filter-component @filter="filterHandler"></filter-component>
         <ul>
             <!-- :key 建議搭配後端的 primary key-->
-            <li v-for="(item,index) of filterList" :key="item.timestamp">
+            <!-- <li v-for="(item,index) of filterList" :key="item.timestamp">
                 <template v-if="editing === item">
                     <input type="text" v-model="editingText">
                     <button @click="completeHandler">完成</button>
@@ -45,7 +45,17 @@
                     <button @click="editHandler(item)">修改</button>
                     <button @click="deleteHandler(item)">刪除</button>
                 </template>
-            </li>
+            </li> -->
+            <li is="list-item-component" 
+            v-for="(item,index) of filterList" 
+            :key="item.timestamp" 
+            :item="item" 
+            :editing="editing" 
+            @change="changeHandler"
+            @delete="deleteHandler" 
+            @edit="editHandler" 
+            @complate="completeHandler" 
+            @cancel="cancelHandler"></li>
         </ul>
     </div>
 </body>

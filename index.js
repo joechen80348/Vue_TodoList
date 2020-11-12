@@ -95,6 +95,68 @@ Vue.component("InputComponent2", {
 })
 
 
+// 1. 傳物件 2. 傳資料(建議使用)
+Vue.component("list-item-component",{
+    data:function(){
+        return {
+            editingText: "",            // 修改內容
+        }
+    },
+    props: ["item","editing"],
+    template:`
+        <li>
+            <template v-if="editing === item">
+                <input type="text" v-model="editingText">
+                <button @click="completeHandler">完成</button>
+                <button @click="cancelHandler">取消</button>
+            </template>
+            <template v-else>
+                <input type="checkbox" v-model="status">{{item.content}}
+                <button @click="editHandler(item)">修改</button>
+                <button @click="deleteHandler(item)">刪除</button>
+            </template>
+        </li>
+    `,
+    computed:{
+        status:{
+            get(){
+                return this.item.status
+            },
+            set(value){
+                this.$emit("change",this.item,value)
+            }
+        }  
+    },
+    methods:{
+        deleteHandler(item) {
+            this.$emit("delete",item)
+            // 1. 第一種
+            // this.list = this.list.filter((target) => {
+            //     return target != item
+            // })
+
+            // 2. 第二種
+            //this.list.splice(index,1)
+        },
+        editHandler(item) {
+            this.$emit("edit",item)
+            //this.editing = item
+            this.editingText = item.content
+        },
+        completeHandler() {
+            this.$emit("complate", this.editingText.trim())
+            // this.editing.content = this.editingText.trim()
+            this.cancelHandler()
+        },
+        cancelHandler() {
+            this.editingText = ""
+            // this.editing = null
+            this.$emit("cancel")
+
+        },
+    }
+})
+
 new Vue({
     el: "#app",
     data: {
@@ -103,7 +165,7 @@ new Vue({
         show: "all",                // 顯示類型
         // compositionStatus:false,    // 輸入法狀態
         editing:null,               // 修改資料對象
-        editingText: "",            // 修改內容
+        // editingText: "",            // 修改內容
     },
     computed: {
         filterList() {
@@ -135,27 +197,28 @@ new Vue({
         //     })
         //     this.inputText = ""
         // },
-        deleteHandler(item){
-            // 1. 第一種
-            this.list = this.list.filter((target)=>{
-                return target != item
-            })
 
-            // 2. 第二種
-            //this.list.splice(index,1)
-        },
-        editHandler(item){
-            this.editing = item
-            this.editingText = item.content
-        },
-        completeHandler(){
-            this.editing.content = this.editingText.trim()
-            this.cancelHandler()
-        },
-        cancelHandler(){
-            this.editingText = ""
-            this.editing = null
-        },
+        // deleteHandler(item){
+        //     // 1. 第一種
+        //     this.list = this.list.filter((target)=>{
+        //         return target != item
+        //     })
+
+        //     // 2. 第二種
+        //     //this.list.splice(index,1)
+        // },
+        // editHandler(item){
+        //     this.editing = item
+        //     this.editingText = item.content
+        // },
+        // completeHandler(){
+        //     this.editing.content = this.editingText.trim()
+        //     this.cancelHandler()
+        // },
+        // cancelHandler(){
+        //     this.editingText = ""
+        //     this.editing = null
+        // },
         inputHandler() {
             this.list.push({
                 timestamp: new Date().getTime(),
@@ -171,6 +234,29 @@ new Vue({
                 content: value.trim()
             })
         },
+
+        deleteHandler(item){
+            // 1. 第一種
+            this.list = this.list.filter((target)=>{
+                return target != item
+            })
+
+            // 2. 第二種
+            //this.list.splice(index,1)
+        },
+        editHandler(item){
+            this.editing = item
+        },
+        completeHandler(value){
+            this.editing.content = value
+        },
+        cancelHandler(){
+            this.editing = null
+        },
+
+        changeHandler(item,value){
+            item.status = value
+        }
         
 
     }
