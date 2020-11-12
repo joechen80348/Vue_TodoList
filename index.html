@@ -16,12 +16,16 @@
 <body>
     <div id="app">
         <!-- composition : 輸入法的開始與結束 -->
-        <p>
+        <!-- <p>
             <input type="text" v-model="inputText" 
             @compositionstart="cstartHandler" 
             @compositionend="cendHandler"
             @keyup.enter="inputHandler">
-        </p>
+        </p> -->
+        <input-component @custom-input="inputHandler" v-model="inputText"></input-component>
+
+        <input-component2 @custom-input="inputHandler2" ></input-component2>
+
         <!-- <p>
             <button @click="show = 'all'">全部</button>
             <button @click="show = 'open'">未完成</button>
